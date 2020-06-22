@@ -1,4 +1,4 @@
-# Adobe Stock Integration
+# Adobe Stock Integration - test
 
 [![Coverage Status](https://coveralls.io/repos/github/magento/adobe-stock-integration/badge.svg?branch=develop)](https://coveralls.io/github/magento/adobe-stock-integration?branch=develop)
 
