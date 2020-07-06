@@ -37,10 +37,9 @@ class ContentStatus implements CustomFilterInterface
      */
     public function apply(Filter $filter, AbstractDb $collection): bool
     {
-        $value = $filter->getValue();
         $collection->addFieldToFilter(
             self::TABLE_ALIAS . '.id',
-            ['in' => $this->getContentIdByStatusComposite->execute($value)]
+            ['in' => $this->getContentIdByStatusComposite->execute($filter->getValue())]
         );
 
         return true;
