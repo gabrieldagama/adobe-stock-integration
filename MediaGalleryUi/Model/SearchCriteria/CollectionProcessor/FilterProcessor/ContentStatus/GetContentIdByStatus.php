@@ -4,6 +4,8 @@ namespace Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\Filter
 
 interface GetContentIdByStatus
 {
+    const TABLE_CONTENT_ASSET = 'media_content_asset';
+
     /**
      * @param string $value
      * @return array
