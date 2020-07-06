@@ -71,7 +71,7 @@ class GetTableContentIdByStatus implements GetContentIdByStatus
     public function execute(string $value): array
     {
         $sql = $this->connection->getConnection()->select()->from(
-            ['mca' => $this->connection->getTableName(self::TABLE_CONTENT_ASSET)],
+            ['asset_content_table' => $this->connection->getTableName(self::TABLE_CONTENT_ASSET)],
             ['asset_id']
         )->where(
             'entity_type = ?',

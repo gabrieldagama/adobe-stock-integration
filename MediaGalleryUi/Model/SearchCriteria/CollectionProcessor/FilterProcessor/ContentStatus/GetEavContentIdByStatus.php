@@ -56,7 +56,7 @@ class GetEavContentIdByStatus implements GetContentIdByStatus
         string $attributeCode,
         string $entityType,
         int $entityTypeId,
-        array $valueMap
+        array $valueMap = []
     ) {
         $this->connection = $resource;
         $this->entityEavTypeTable = $entityEavTypeTable;
