@@ -9,26 +9,27 @@ namespace Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\Filter
 
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor\CustomFilterInterface;
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Select;
+use Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetContentIdByStatusComposite;
 
 class ContentStatus implements CustomFilterInterface
 {
     private const TABLE_ALIAS = 'main_table';
-    private const TABLE_CONTENT_ASSET = 'media_content_asset';
 
     /**
-     * @var ResourceConnection
+     * @var GetContentIdByStatusComposite
      */
-    private $connection;
+    private $getContentIdByStatusComposite;
 
     /**
-     * @param ResourceConnection $resource
+     * ContentStatus constructor.
+     * @param GetContentIdByStatusComposite $getContentIdByStatusComposite
      */
-    public function __construct(ResourceConnection $resource)
-    {
-        $this->connection = $resource;
+    public function __construct(
+        GetContentIdByStatusComposite $getContentIdByStatusComposite
+    ) {
+        $this->getContentIdByStatusComposite = $getContentIdByStatusComposite;
     }
 
     /**
@@ -37,33 +38,12 @@ class ContentStatus implements CustomFilterInterface
     public function apply(Filter $filter, AbstractDb $collection): bool
     {
         $value = $filter->getValue();
-        $test = $this->getEnabledIds($value);
-//        $collection->addFieldToFilter('cpei.value', $value);
+        $collection->addFieldToFilter(
+            self::TABLE_ALIAS . '.id',
+            ['in' => $this->getContentIdByStatusComposite->execute($value)]
+        );
 
         return true;
     }
 
-    /**
-     * Return select asset ids by keyword
-     *
-     * @param string $value
-     * @return Select
-     */
-    private function getEnabledIds(string $value): Select
-    {
-        return $this->connection->getConnection()->select()->from(
-            ['mca' => $this->connection->getTableName(self::TABLE_CONTENT_ASSET)],
-            ['asset_id']
-        )->where(
-            'entity_type = ?',
-            'catalog_product'
-        )->joinInner(
-            ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
-            'mca.entity_id = cpei.entity_id AND cpei.attribute_id = 97',
-            []
-        )->where(
-            'cpei.value = ?',
-            $value
-        );
-    }
 }

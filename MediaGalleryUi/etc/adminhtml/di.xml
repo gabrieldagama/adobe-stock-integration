@@ -39,4 +39,11 @@
             <argument name="collectionProcessor" xsi:type="object">Magento\MediaGalleryUi\Model\Api\SearchCriteria\CollectionProcessor</argument>
         </arguments>
     </type>
+    <type name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetContentIdByStatusComposite">
+        <arguments>
+            <argument name="getContentIdByStatusArray" xsi:type="array">
+                <item name="getProductIdByStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetProductIdByStatus</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
