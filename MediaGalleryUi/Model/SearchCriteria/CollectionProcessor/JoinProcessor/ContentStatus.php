@@ -38,16 +38,6 @@ class ContentStatus implements CustomJoinInterface
      */
     public function apply(AbstractDb $collection): bool
     {
-        $collection->getSelect()->joinLeft(
-            ['mca' => $this->connection->getTableName(self::MEDIA_CONTENT_ASSET_TABLE_NAME)],
-            'mca.asset_id = main_table.id',
-            ['entity_type', 'entity_id']
-        );
-        $collection->getSelect()->joinLeft(
-            ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
-            'mca.entity_id = cpei.entity_id AND cpei.attribute_id = 97 AND mca.entity_type = "catalog_product"',
-        );
-
         return true;
     }
 }

@@ -16,8 +16,7 @@ use Magento\Framework\DB\Select;
 class ContentStatus implements CustomFilterInterface
 {
     private const TABLE_ALIAS = 'main_table';
-    private const TABLE_KEYWORDS = 'media_gallery_asset_keyword';
-    private const TABLE_ASSET_KEYWORD = 'media_gallery_keyword';
+    private const TABLE_CONTENT_ASSET = 'media_content_asset';
 
     /**
      * @var ResourceConnection
@@ -38,8 +37,8 @@ class ContentStatus implements CustomFilterInterface
     public function apply(Filter $filter, AbstractDb $collection): bool
     {
         $value = $filter->getValue();
-
-        $collection->addFieldToFilter('cpei.value', $value);
+        $test = $this->getEnabledIds($value);
+//        $collection->addFieldToFilter('cpei.value', $value);
 
         return true;
     }
@@ -50,22 +49,21 @@ class ContentStatus implements CustomFilterInterface
      * @param string $value
      * @return Select
      */
-    private function getSelectByKeyword(string $value): Select
+    private function getEnabledIds(string $value): Select
     {
         return $this->connection->getConnection()->select()->from(
-            $this->connection->getConnection()->select()
-                ->from(
-                    ['asset_keywords_table' => $this->connection->getTableName(self::TABLE_ASSET_KEYWORD)],
-                    ['id']
-                )->where(
-                    'keyword = ?',
-                    $value
-                )->joinInner(
-                    ['keywords_table' => $this->connection->getTableName(self::TABLE_KEYWORDS)],
-                    'keywords_table.keyword_id = asset_keywords_table.id',
-                    ['asset_id']
-                ),
+            ['mca' => $this->connection->getTableName(self::TABLE_CONTENT_ASSET)],
             ['asset_id']
+        )->where(
+            'entity_type = ?',
+            'catalog_product'
+        )->joinInner(
+            ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
+            'mca.entity_id = cpei.entity_id AND cpei.attribute_id = 97',
+            []
+        )->where(
+            'cpei.value = ?',
+            $value
         );
     }
 }
