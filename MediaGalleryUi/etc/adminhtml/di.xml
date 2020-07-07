@@ -39,18 +39,25 @@
             <argument name="collectionProcessor" xsi:type="object">Magento\MediaGalleryUi\Model\Api\SearchCriteria\CollectionProcessor</argument>
         </arguments>
     </type>
-    <type name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetContentIdByStatusComposite">
+    <type name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus">
         <arguments>
-            <argument name="getContentIdByStatusArray" xsi:type="array">
-                <item name="getProductIdByStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetProductIdByStatus</item>
-                <item name="getCategoryIdByStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetCategoryIdByStatus</item>
-                <item name="getPageIdByStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetPageIdByStatus</item>
-                <item name="getBlockIdByStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetBlockIdByStatus</item>
+            <argument name="getAssetIdByContentStatus" xsi:type="object">
+                Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByContentStatusComposite
             </argument>
         </arguments>
     </type>
-    <virtualType name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetProductIdByStatus"
-                 type="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetEavContentIdByStatus">
+    <type name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByContentStatusComposite">
+        <arguments>
+            <argument name="getAssetIdByContentStatusArray" xsi:type="array">
+                <item name="getAssetIdByProductStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByProductStatus</item>
+                <item name="getAssetIdByCategoryStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByCategoryStatus</item>
+                <item name="getAssetIdByPageStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByPageStatus</item>
+                <item name="getAssetIdByBlockStatus" xsi:type="object">Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByBlockStatus</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByProductStatus"
+                 type="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByEavContentStatus">
         <arguments>
             <argument name="entityEavTypeTable" xsi:type="string">catalog_product_entity_int</argument>
             <argument name="attributeCode" xsi:type="string">status</argument>
@@ -62,8 +69,8 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetCategoryIdByStatus"
-                 type="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetEavContentIdByStatus">
+    <virtualType name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByCategoryStatus"
+                 type="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByEavContentStatus">
         <arguments>
             <argument name="entityEavTypeTable" xsi:type="string">catalog_category_entity_int</argument>
             <argument name="attributeCode" xsi:type="string">is_active</argument>
@@ -71,8 +78,8 @@
             <argument name="entityTypeId" xsi:type="string">3</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetPageIdByStatus"
-                 type="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetTableContentIdByStatus">
+    <virtualType name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByPageStatus"
+                 type="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByContentStatus">
         <arguments>
             <argument name="entityType" xsi:type="string">cms_page</argument>
             <argument name="contentTable" xsi:type="string">cms_page</argument>
@@ -80,8 +87,8 @@
             <argument name="statusColumn" xsi:type="string">is_active</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetBlockIdByStatus"
-                 type="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetTableContentIdByStatus">
+    <virtualType name="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByBlockStatus"
+                 type="Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByContentStatus">
         <arguments>
             <argument name="entityType" xsi:type="string">cms_block</argument>
             <argument name="contentTable" xsi:type="string">cms_block</argument>

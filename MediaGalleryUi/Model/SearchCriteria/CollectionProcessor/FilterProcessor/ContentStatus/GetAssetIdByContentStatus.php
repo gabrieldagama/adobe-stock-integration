@@ -5,11 +5,11 @@ namespace Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\Filter
 use Magento\Framework\App\ResourceConnection;
 
 /**
- * Class GetEavContentIdByStatus
+ * Class GetAssetIdByContentStatus
  */
-class GetEavContentIdByStatus implements GetContentIdByStatus
+class GetAssetIdByContentStatus implements GetAssetIdByContentStatusInterface
 {
-    private const TABLE_EAV_ATTRIBUTE = 'eav_attribute';
+    private const TABLE_CONTENT_ASSET = 'media_content_asset';
 
     /**
      * @var ResourceConnection
@@ -19,22 +19,22 @@ class GetEavContentIdByStatus implements GetContentIdByStatus
     /**
      * @var string
      */
-    private $entityEavTypeTable;
-
-    /**
-     * @var string
-     */
-    private $attributeCode;
-
-    /**
-     * @var string
-     */
     private $entityType;
 
     /**
-     * @var int
+     * @var string
      */
-    private $entityTypeId;
+    private $contentTable;
+
+    /**
+     * @var string
+     */
+    private $statusColumn;
+
+    /**
+     * @var string
+     */
+    private $idColumn;
 
     /**
      * @var array
@@ -42,27 +42,27 @@ class GetEavContentIdByStatus implements GetContentIdByStatus
     private $valueMap;
 
     /**
-     * GetEavContentIdByStatus constructor.
+     * GetContentIdByStatus constructor.
      * @param ResourceConnection $resource
-     * @param string $entityEavTypeTable
-     * @param string $attributeCode
      * @param string $entityType
-     * @param int $entityTypeId
+     * @param string $contentTable
+     * @param string $idColumn
+     * @param string $statusColumn
      * @param array $valueMap
      */
     public function __construct(
         ResourceConnection $resource,
-        string $entityEavTypeTable,
-        string $attributeCode,
         string $entityType,
-        int $entityTypeId,
+        string $contentTable,
+        string $idColumn,
+        string $statusColumn,
         array $valueMap = []
     ) {
         $this->connection = $resource;
-        $this->entityEavTypeTable = $entityEavTypeTable;
-        $this->attributeCode = $attributeCode;
         $this->entityType = $entityType;
-        $this->entityTypeId = $entityTypeId;
+        $this->contentTable = $contentTable;
+        $this->idColumn = $idColumn;
+        $this->statusColumn = $statusColumn;
         $this->valueMap = $valueMap;
     }
 
@@ -72,7 +72,6 @@ class GetEavContentIdByStatus implements GetContentIdByStatus
      */
     public function execute(string $value): array
     {
-        $statusAttributeId = $this->getAttributeId();
         $sql = $this->connection->getConnection()->select()->from(
             ['asset_content_table' => $this->connection->getTableName(self::TABLE_CONTENT_ASSET)],
             ['asset_id']
@@ -80,35 +79,19 @@ class GetEavContentIdByStatus implements GetContentIdByStatus
             'entity_type = ?',
             $this->entityType
         )->joinInner(
-            ['entity_eav_type' => $this->connection->getTableName($this->entityEavTypeTable)],
-            'asset_content_table.entity_id = entity_eav_type.entity_id AND entity_eav_type.attribute_id = ' .
-            $statusAttributeId,
+            ['content_table' => $this->connection->getTableName($this->contentTable)],
+            'asset_content_table.entity_id = content_table.' . $this->idColumn,
             []
         )->where(
-            'entity_eav_type.value = ?',
+            'content_table.' . $this->statusColumn . ' = ?',
             $this->getValueFromMap($value)
         );
 
-        return $this->connection->getConnection()->fetchAll($sql);
-    }
+        $result = $this->connection->getConnection()->fetchAll($sql);
 
-    /**
-     * @return int
-     */
-    private function getAttributeId(): int
-    {
-        $sql = $this->connection->getConnection()->select()->from(
-            ['eav' => $this->connection->getTableName(self::TABLE_EAV_ATTRIBUTE)],
-            ['attribute_id']
-        )->where(
-            'entity_type_id = ?',
-            $this->entityTypeId
-        )->where(
-            'attribute_code = ?',
-            $this->attributeCode
-        );
-
-        return $this->connection->getConnection()->fetchOne($sql);
+        return array_map(function ($item) {
+            return $item['asset_id'];
+        }, $result);
     }
 
     /**

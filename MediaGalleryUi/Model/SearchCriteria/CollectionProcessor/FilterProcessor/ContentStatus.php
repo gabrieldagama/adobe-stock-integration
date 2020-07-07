@@ -10,26 +10,25 @@ namespace Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\Filter
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor\CustomFilterInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
-use Magento\Framework\DB\Select;
-use Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetContentIdByStatusComposite;
+use Magento\MediaGalleryUi\Model\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStatus\GetAssetIdByContentStatusInterface;
 
 class ContentStatus implements CustomFilterInterface
 {
     private const TABLE_ALIAS = 'main_table';
 
     /**
-     * @var GetContentIdByStatusComposite
+     * @var GetAssetIdByContentStatusInterface
      */
-    private $getContentIdByStatusComposite;
+    private $getAssetIdByContentStatus;
 
     /**
      * ContentStatus constructor.
-     * @param GetContentIdByStatusComposite $getContentIdByStatusComposite
+     * @param GetAssetIdByContentStatusInterface $getAssetIdByContentStatus
      */
     public function __construct(
-        GetContentIdByStatusComposite $getContentIdByStatusComposite
+        GetAssetIdByContentStatusInterface $getAssetIdByContentStatus
     ) {
-        $this->getContentIdByStatusComposite = $getContentIdByStatusComposite;
+        $this->getAssetIdByContentStatus = $getAssetIdByContentStatus;
     }
 
     /**
@@ -39,7 +38,7 @@ class ContentStatus implements CustomFilterInterface
     {
         $collection->addFieldToFilter(
             self::TABLE_ALIAS . '.id',
-            ['in' => $this->getContentIdByStatusComposite->execute($filter->getValue())]
+            ['in' => $this->getAssetIdByContentStatus->execute($filter->getValue())]
         );
 
         return true;
